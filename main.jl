@@ -284,7 +284,7 @@ function nb_of_valid_passwords_part1(passwords :: AbstractArray{Password})
 			for c in password.p
 				m += c == password.policy_char
 			end
-			if m ∈ password.policy_range 1 else 0 end
+			m ∈ password.policy_range
 		end,
 		passwords
 	)
