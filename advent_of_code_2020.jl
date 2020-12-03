@@ -135,12 +135,11 @@ end
 
 # ╔═╡ a6abdfc0-3536-11eb-3003-c13c39952d78
 function nb_trees_encountered(area :: AbstractArray{Bool, 2}, moves = [(1, 3)])
+	m, n = size(area)
 	map(moves) do (di, dj)					
-		foldl(
-			((j, sum), i) -> (mod1(j + dj, size(area, 2)), sum + area[i, j]),
-			1:di:size(area, 1),
-			init = (1, 0)
-		)[2]
+		foldl(1:di:m, init = (1, 0)) do (j, sum), i
+			mod1(j + dj, n), sum + area[i, j]
+		end[2]
 	end
 end
 
@@ -172,7 +171,7 @@ Test 1, part 2: $(prod(n_part2) == 336)
 	"
 end
 
-# ╔═╡ c003a5ae-3537-11eb-00b2-e58a970471ac
+# ╔═╡ 6b1aac80-3553-11eb-0816-6b74dcff2b86
 input_day3 = parse_day3(readlines("data/day03.txt"))
 
 # ╔═╡ ab7f3260-3539-11eb-3f97-fde10d5d852b
@@ -205,5 +204,5 @@ md"
 # ╠═a6abdfc0-3536-11eb-3003-c13c39952d78
 # ╠═1814fa70-353c-11eb-20de-51f779e98bdb
 # ╟─da0fb260-3536-11eb-2c09-8f1b322090ab
-# ╟─c003a5ae-3537-11eb-00b2-e58a970471ac
+# ╟─6b1aac80-3553-11eb-0816-6b74dcff2b86
 # ╟─ab7f3260-3539-11eb-3f97-fde10d5d852b
