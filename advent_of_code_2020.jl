@@ -181,6 +181,115 @@ md"
 **Result for part 2**: $(nb_trees_encountered_part2(input_day3) |> prod)
 "
 
+# ╔═╡ e43e2c90-35fd-11eb-1bf4-179363184fad
+md"## Day 4"
+
+# ╔═╡ eba88520-35fd-11eb-1810-819e3fb57682
+function parse_day4(lines)
+	passports = [Dict{String, String}()]
+	for line ∈ lines
+		if line == ""
+			push!(passports, Dict())
+		else
+			for value in split(line, ' ')
+				key_value = split(value, ':')
+				last(passports)[key_value[1]] = key_value[2]
+			end
+		end
+	end
+	passports
+end
+
+# ╔═╡ 419cea1e-35fe-11eb-350c-19bf6016e01c
+function count_nb_valid_passport(passports :: AbstractArray{Dict{String,String}}, check_fields_integrity = false)
+	required_fields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
+	function check_field(field, value)		
+		try
+			field == "byr" && 1920 ≤ parse(Int, value) ≤ 2020 ||
+			field == "iyr" && 2010 ≤ parse(Int, value) ≤ 2020 ||
+			field == "eyr" && 2020 ≤ parse(Int, value) ≤ 2030 ||
+			field == "hgt" &&
+				((inches = match(r"(\d+)in", value)) ≠ nothing && 59 ≤ parse(Int, inches.captures[1]) ≤ 76 ||
+				 (cm = match(r"(\d+)cm", value)) ≠ nothing && 150 ≤ parse(Int, cm.captures[1]) ≤ 193) ||
+			field == "hcl" && occursin(r"^#[0-9a-f]{6}$", value) ||
+			field == "ecl" && value ∈ ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"] ||
+			field == "pid" && occursin(r"^[0-9]{9}$", value)
+		catch
+			false
+		end
+	end
+	
+	count(passports) do p
+		all(required_fields) do f
+			haskey(p, f) && (!check_fields_integrity || check_field(f, p[f]))
+		end
+	end
+end
+
+# ╔═╡ b8d2afc0-35ff-11eb-2fb1-7dba5d323768
+let
+	test1_part1 = "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+byr:1937 iyr:2017 cid:147 hgt:183cm
+
+iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+hcl:#cfa07d byr:1929
+
+hcl:#ae17e1 iyr:2013
+eyr:2024
+ecl:brn pid:760753108 byr:1931
+hgt:179cm
+
+hcl:#cfa07d eyr:2025 pid:166559648
+iyr:2011 ecl:brn hgt:59in"
+	
+	result_test1_part1 = count_nb_valid_passport(parse_day4(split(test1_part1, '\n')))
+	
+	test1_part2 = "eyr:1972 cid:100
+hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
+
+iyr:2019
+hcl:#602927 eyr:1967 hgt:170cm
+ecl:grn pid:012533040 byr:1946
+
+hcl:dab227 iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+hgt:59cm ecl:zzz
+eyr:2038 hcl:74454a iyr:2023
+pid:3556412378 byr:2007"
+	result_test1_part2 = count_nb_valid_passport(parse_day4(split(test1_part2, '\n')), true)
+	
+	test2_part2 = "pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+hcl:#623a2f
+
+eyr:2029 ecl:blu cid:129 byr:1989
+iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
+
+hcl:#888785
+hgt:164cm byr:2001 iyr:2015 cid:88
+pid:545766238 ecl:hzl
+eyr:2022"
+	result_test2_part2 = count_nb_valid_passport(parse_day4(split(test2_part2, '\n')), true)
+		
+	md"
+Test 1, part 1: $(result_test1_part1 == 2)
+
+Test 1, part 2: $(result_test1_part2 == 0)
+	
+Test 2, part 2: $(result_test2_part2 == 3)
+	"
+end
+
+# ╔═╡ 6c01cf90-3600-11eb-0762-ad046d0d0775
+input_day4 = parse_day4(readlines("data/day04.txt"))
+
+# ╔═╡ 953ee8c2-3600-11eb-1684-79ff44185b5f
+md"
+**Result for part 1**: $(count_nb_valid_passport(input_day4))
+
+**Result for part 2**: $(count_nb_valid_passport(input_day4, true))
+"
+
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
@@ -206,3 +315,9 @@ md"
 # ╟─da0fb260-3536-11eb-2c09-8f1b322090ab
 # ╟─6b1aac80-3553-11eb-0816-6b74dcff2b86
 # ╟─ab7f3260-3539-11eb-3f97-fde10d5d852b
+# ╟─e43e2c90-35fd-11eb-1bf4-179363184fad
+# ╠═eba88520-35fd-11eb-1810-819e3fb57682
+# ╠═419cea1e-35fe-11eb-350c-19bf6016e01c
+# ╟─b8d2afc0-35ff-11eb-2fb1-7dba5d323768
+# ╟─6c01cf90-3600-11eb-0762-ad046d0d0775
+# ╟─953ee8c2-3600-11eb-1684-79ff44185b5f
