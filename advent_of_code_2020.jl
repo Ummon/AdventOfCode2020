@@ -290,6 +290,47 @@ md"
 **Result for part 2**: $(count_nb_valid_passport(input_day4, true))
 "
 
+# ╔═╡ 11d48ec0-3864-11eb-2dcf-3302fbb74b2d
+md"## Day 5"
+
+# ╔═╡ 18269980-3864-11eb-19d6-71f75b104ae5
+function parse_day5(lines)
+	map(lines) do line		
+		row = parse(Int, join(replace(split(line[1:7], ""), "F" => "0", "B" => "1")); base = 2)
+		col = parse(Int, join(replace(split(line[8:10], ""), "L" => "0", "R" => "1")); base = 2)
+		row * 8 + col
+	end
+end
+
+# ╔═╡ 9d237b60-3866-11eb-2dd8-c19a6cbded5b
+let
+	test = [ "FBFBBFFRLR" ]
+	result = parse_day5(test)
+	md"
+Test 1, part 1: $(result[1] == 357)
+	"
+end
+
+# ╔═╡ e881a6d0-3867-11eb-3261-0d86b4370065
+function find_missing_id(ids)
+	sorted_ids = sort(ids)
+	for i ∈ 1:length(sorted_ids)-1
+		if sorted_ids[i] + 1 ≠ sorted_ids[i + 1]
+			return sorted_ids[i] + 1
+		end
+	end
+end
+
+# ╔═╡ cb986040-3867-11eb-0d78-594ac9d9a547
+input_day5 = parse_day5(readlines("data/day05.txt"))
+
+# ╔═╡ bdc1be30-3867-11eb-1939-1f0a42a4ac92
+md"
+**Result for part 1**: $(input_day5 |> maximum)
+
+**Result for part 2**: $(find_missing_id(input_day5))
+"
+
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
@@ -321,3 +362,9 @@ md"
 # ╟─b8d2afc0-35ff-11eb-2fb1-7dba5d323768
 # ╟─6c01cf90-3600-11eb-0762-ad046d0d0775
 # ╟─953ee8c2-3600-11eb-1684-79ff44185b5f
+# ╟─11d48ec0-3864-11eb-2dcf-3302fbb74b2d
+# ╠═18269980-3864-11eb-19d6-71f75b104ae5
+# ╠═9d237b60-3866-11eb-2dd8-c19a6cbded5b
+# ╠═e881a6d0-3867-11eb-3261-0d86b4370065
+# ╟─cb986040-3867-11eb-0d78-594ac9d9a547
+# ╟─bdc1be30-3867-11eb-1939-1f0a42a4ac92
