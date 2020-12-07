@@ -331,6 +331,71 @@ md"
 **Result for part 2**: $(find_missing_id(input_day5))
 "
 
+# ╔═╡ dc7eabf0-386a-11eb-22e7-578a73e3cd8f
+md"## Day 6"
+
+# ╔═╡ e1658df0-386a-11eb-39d9-218b9b2d494f
+function parse_day6(lines) :: Array{Array{Set{Char}}}
+	groups = [[]]
+	for line ∈ lines
+		if line == ""
+			push!(groups, [])
+		else
+			push!(last(groups), Set(line))
+		end
+	end
+	groups
+end
+
+# ╔═╡ cb221aa0-386e-11eb-22de-9d7379db14e2
+function sum_of_group_lengths(groups, f)
+	map(groups) do group
+		length(reduce(f, group))
+	end |> sum	
+end
+
+# ╔═╡ e9696760-386a-11eb-1aa3-ad421dc1fe83
+let
+	input = """
+	abc
+	
+	a
+	b
+	c
+
+	ab
+	ac
+
+	a
+	a
+	a
+	a
+
+	b"""
+	
+	result_part1 = sum_of_group_lengths(parse_day6(split(input, '\n')), union)
+	result_part2 = sum_of_group_lengths(parse_day6(split(input, '\n')), intersect)
+	md"
+Test 1, part 1: $(result_part1 == 11)
+	
+Test 1, part 2: $(result_part2 == 6)
+	"
+end
+
+# ╔═╡ 0a51a420-386f-11eb-025d-b9d1e1b79fd8
+begin 
+	file = "data/day06.txt"
+	input_day6 = parse_day6(readlines(file))
+	md"Number of groups read from *$file*: $(length(input_day6))"
+end
+
+# ╔═╡ dd1a2f00-3872-11eb-2ae9-ad73995fc382
+md"
+**Result for part 1**: $(sum_of_group_lengths(input_day6, union))
+
+**Result for part 2**: $(sum_of_group_lengths(input_day6, intersect))
+"
+
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
@@ -368,3 +433,9 @@ md"
 # ╠═e881a6d0-3867-11eb-3261-0d86b4370065
 # ╟─cb986040-3867-11eb-0d78-594ac9d9a547
 # ╟─bdc1be30-3867-11eb-1939-1f0a42a4ac92
+# ╟─dc7eabf0-386a-11eb-22e7-578a73e3cd8f
+# ╠═e1658df0-386a-11eb-39d9-218b9b2d494f
+# ╠═cb221aa0-386e-11eb-22de-9d7379db14e2
+# ╟─e9696760-386a-11eb-1aa3-ad421dc1fe83
+# ╟─0a51a420-386f-11eb-025d-b9d1e1b79fd8
+# ╟─dd1a2f00-3872-11eb-2ae9-ad73995fc382
