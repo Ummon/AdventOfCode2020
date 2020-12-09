@@ -396,6 +396,108 @@ md"
 **Result for part 2**: $(sum_of_group_lengths(input_day6, intersect))
 "
 
+# ╔═╡ 22426ef0-388f-11eb-38a3-232fb088ef4f
+md"## Day 7"
+
+# ╔═╡ 94a84a10-389d-11eb-12a7-630db0e13276
+struct Bags
+	matrix :: Array{Int, 2}
+	names :: Dict{String, Int}
+end
+
+# ╔═╡ 295cabb0-388f-11eb-2227-d73ae2c1e781
+function parse_day7(lines)
+	l = length(lines)
+	m = zeros(Int, l, l)	
+	name_indices = Dict{String, Int}()
+	
+	get_bag_index(name) = get!(name_indices, name, length(name_indices) + 1)
+		
+	for i ∈ 1:l
+		line = lines[i]
+		bag = match(r"^\w+ \w+", line).match		
+		bag_index = get_bag_index(bag)
+		for inner_bag ∈ eachmatch(r"(\d+) (\w+ \w+) bag", line)
+			n = parse(Int, inner_bag[1])
+			m[bag_index, get_bag_index(inner_bag[2])] = n
+		end
+	end
+	
+	Bags(m, name_indices)
+end
+
+# ╔═╡ 3ae9b650-38a0-11eb-1840-21cc6c2841b6
+function bags_that_contain(name, bags)
+	visited = falses(length(bags.names))
+	to_visit = [bags.names[name]]	
+	while !isempty(to_visit)
+		current = pop!(to_visit)		
+		
+		visited[current] = true
+		containing = findall(≠(0), bags.matrix[:, current] .* .!visited)
+		 
+		append!(to_visit, containing)
+	end	
+	findall(visited)
+end
+
+# ╔═╡ c26e4ed0-39f2-11eb-1338-57a3ce8069e0
+function nb_bags_contained(name, bags)	
+	function nb_bags_contained(bag_index)
+		content = bags.matrix[bag_index, :]
+		indexes = findall(≠(0), content)
+		
+		1 + (isempty(indexes) ? 0 : sum(nb_bags_contained.(indexes) .* filter(≠(0), content)))
+	end
+	
+	nb_bags_contained(bags.names[name]) - 1
+end
+
+# ╔═╡ 30488570-388f-11eb-2ede-b10bdd1a06e8
+let
+	input₁ = "light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags."
+	input₂ = "shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags."
+	
+	bags₁ = parse_day7(split(input₁, '\n'))
+	bags₂ = parse_day7(split(input₂, '\n'))
+	
+	result_part1 = length(bags_that_contain("shiny gold", bags₁)) - 1
+	result1_part2 = nb_bags_contained("shiny gold", bags₁) 	
+	result2_part2 = nb_bags_contained("shiny gold", bags₂)
+	
+	md"
+Test 1, part 1: $(result_part1 == 4)
+	
+Test 1, part 2: $(result1_part2 == 32)
+	
+Test 2, part 2: $(result2_part2 == 126)
+	"
+end
+
+# ╔═╡ 20351e70-396e-11eb-25da-87d7ef27f902
+input_day7 = parse_day7(readlines("data/day07.txt"))	
+
+# ╔═╡ e825e690-39f9-11eb-21bc-099cc7a9e389
+md"
+**Result for part 1**: $(length(bags_that_contain(\"shiny gold\", input_day7)) - 1)
+
+**Result for part 2**: $(nb_bags_contained(\"shiny gold\", input_day7))
+"
+
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
@@ -429,7 +531,7 @@ md"
 # ╟─953ee8c2-3600-11eb-1684-79ff44185b5f
 # ╟─11d48ec0-3864-11eb-2dcf-3302fbb74b2d
 # ╠═18269980-3864-11eb-19d6-71f75b104ae5
-# ╠═9d237b60-3866-11eb-2dd8-c19a6cbded5b
+# ╟─9d237b60-3866-11eb-2dd8-c19a6cbded5b
 # ╠═e881a6d0-3867-11eb-3261-0d86b4370065
 # ╟─cb986040-3867-11eb-0d78-594ac9d9a547
 # ╟─bdc1be30-3867-11eb-1939-1f0a42a4ac92
@@ -439,3 +541,11 @@ md"
 # ╟─e9696760-386a-11eb-1aa3-ad421dc1fe83
 # ╟─0a51a420-386f-11eb-025d-b9d1e1b79fd8
 # ╟─dd1a2f00-3872-11eb-2ae9-ad73995fc382
+# ╟─22426ef0-388f-11eb-38a3-232fb088ef4f
+# ╠═94a84a10-389d-11eb-12a7-630db0e13276
+# ╠═295cabb0-388f-11eb-2227-d73ae2c1e781
+# ╠═3ae9b650-38a0-11eb-1840-21cc6c2841b6
+# ╠═c26e4ed0-39f2-11eb-1338-57a3ce8069e0
+# ╟─30488570-388f-11eb-2ede-b10bdd1a06e8
+# ╟─20351e70-396e-11eb-25da-87d7ef27f902
+# ╟─e825e690-39f9-11eb-21bc-099cc7a9e389
