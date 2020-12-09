@@ -498,6 +498,104 @@ md"
 **Result for part 2**: $(nb_bags_contained(\"shiny gold\", input_day7))
 "
 
+# ╔═╡ c35b8110-3a0a-11eb-11e8-73b1b2080079
+md"## Day 8"
+
+# ╔═╡ 7c64c710-3a0c-11eb-17bb-1db527c932a3
+struct Instruction
+	operator :: Symbol
+	argument :: Int
+end
+
+# ╔═╡ c8548b80-3a0a-11eb-067d-9dc6716dc325
+function parse_day8(lines)
+	map(lines) do line
+		splitted = split(line, ' ')
+		Instruction(Symbol(splitted[1]), parse(Int, splitted[2]))
+	end
+end
+
+# ╔═╡ 9d1a8980-3a0d-11eb-380e-8fcaf30c849c
+function execute(instructions) :: Tuple{Bool, Int}
+	pos = 1
+	accumulator = 0
+	n = length(instructions)
+	visited_positions = falses(n)
+	
+	while pos ≤ n && !visited_positions[pos]
+		visited_positions[pos] = true
+		ins = instructions[pos]
+		if ins.operator == :acc
+			accumulator += ins.argument
+			pos += 1			
+		elseif ins.operator == :jmp
+			pos += ins.argument
+		else # :nop.
+			pos += 1
+		end
+	end
+	pos > n, accumulator
+end
+
+# ╔═╡ 0f1d5380-3a10-11eb-2a71-1f0fddf65b70
+function fix_to_not_loop(instructions)
+	copy = deepcopy(instructions) # To avoid modifying the input.
+		
+	function switch(pos)
+		if copy[pos].operator == :jmp
+			copy[pos] = Instruction(:nop, copy[pos].argument)
+			true
+		elseif copy[pos].operator == :nop
+			copy[pos] = Instruction(:jmp, copy[pos].argument)
+			true
+		else
+			false
+		end
+	end
+	
+	for i ∈ 1:length(copy)
+		if switch(i)
+			finished, accumulator = execute(copy)
+			if finished
+				return accumulator
+			end
+			switch(i)
+		end
+	end
+end
+
+# ╔═╡ d6afedee-3a0a-11eb-31d7-3f16633dbf5d
+let
+	input = "nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6"
+	code = parse_day8(split(input, '\n'))
+	test1_part1 = execute(code)	
+	test1_part2 = fix_to_not_loop(code)
+	
+	md"
+Test 1, part 1: $(test1_part1 == (false, 5))
+	
+Test 1, part 2: $(test1_part2 == 8)
+	"
+end
+
+# ╔═╡ aa322be0-3a0e-11eb-27ec-d13acf9084aa
+input_day8 = parse_day8(readlines("data/day08.txt"))	
+
+# ╔═╡ d867dd80-3a12-11eb-1ae7-3119a294b25a
+md"
+**Result for part 1**: $(execute(input_day8))
+
+**Result for part 2**: $(fix_to_not_loop(input_day8))
+"
+
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
@@ -549,3 +647,11 @@ md"
 # ╟─30488570-388f-11eb-2ede-b10bdd1a06e8
 # ╟─20351e70-396e-11eb-25da-87d7ef27f902
 # ╟─e825e690-39f9-11eb-21bc-099cc7a9e389
+# ╟─c35b8110-3a0a-11eb-11e8-73b1b2080079
+# ╠═7c64c710-3a0c-11eb-17bb-1db527c932a3
+# ╠═c8548b80-3a0a-11eb-067d-9dc6716dc325
+# ╠═9d1a8980-3a0d-11eb-380e-8fcaf30c849c
+# ╠═0f1d5380-3a10-11eb-2a71-1f0fddf65b70
+# ╟─d6afedee-3a0a-11eb-31d7-3f16633dbf5d
+# ╟─aa322be0-3a0e-11eb-27ec-d13acf9084aa
+# ╟─d867dd80-3a12-11eb-1ae7-3119a294b25a
