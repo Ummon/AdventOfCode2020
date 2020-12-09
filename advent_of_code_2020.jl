@@ -13,7 +13,16 @@ main {
 """
 
 # ╔═╡ f0dd4400-3313-11eb-3295-af913c2212fb
-md"# Advent Of Code 2020"
+md"
+# 🦌 Advent Of Code 2020
+
+The goals are:
+* Learn *Julia*
+* Write readable code (avoid golfing)
+* Write efficient code if possible
+
+See [Advent Of Code 2020](https://adventofcode.com/2020) for more information.
+"
 
 # ╔═╡ 0b7b8920-3314-11eb-2cfb-7d20c0967e67
 md"## Day 1"
@@ -516,6 +525,8 @@ function parse_day8(lines)
 end
 
 # ╔═╡ 9d1a8980-3a0d-11eb-380e-8fcaf30c849c
+# The returned boolean is true if the execution has finished correctly or false if there is a infinite loop.
+# The returned integer is the accumulator when the inifinite loop is detected or when the execution has finished correctly.
 function execute(instructions) :: Tuple{Bool, Int}
 	pos = 1
 	accumulator = 0
