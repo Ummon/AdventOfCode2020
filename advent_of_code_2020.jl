@@ -28,7 +28,7 @@ See [Advent Of Code 2020](https://adventofcode.com/2020) for more information.
 md"## Day 1"
 
 # ╔═╡ 877b32e0-3315-11eb-0e96-650b19da693e
-input_day1 = parse.(Int64, split(readline("data/day01.txt"))) |> sort
+input_day1 = parse.(Int64, readlines("data/day01.txt")) |> sort
 
 # ╔═╡ 4adcf8d0-33a8-11eb-0220-696f06894ef3
 function day1_part1(input)
@@ -58,10 +58,10 @@ function day1_part2(input)
 end
 
 # ╔═╡ 7a037310-33ac-11eb-34fb-9bf552883937
-md"**Result for part 1:** $(day1_part1(input_day1))"
+md"
+**Result for part 1:** $(day1_part1(input_day1))
 
-# ╔═╡ c7dcdae0-33b1-11eb-2cab-fbc06c8ef76b
-md"**Result for part 2:** $(day1_part2(input_day1))"
+**Result for part 2:** $(day1_part2(input_day1))"
 
 # ╔═╡ 5d9712b0-3472-11eb-1423-719331dfe52f
 md"## Day 2"
@@ -611,11 +611,10 @@ md"
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
 # ╟─0b7b8920-3314-11eb-2cfb-7d20c0967e67
-# ╠═877b32e0-3315-11eb-0e96-650b19da693e
+# ╟─877b32e0-3315-11eb-0e96-650b19da693e
 # ╠═4adcf8d0-33a8-11eb-0220-696f06894ef3
 # ╠═1e8e7230-33ae-11eb-0a77-035e6a4b9ba8
 # ╟─7a037310-33ac-11eb-34fb-9bf552883937
-# ╟─c7dcdae0-33b1-11eb-2cab-fbc06c8ef76b
 # ╟─5d9712b0-3472-11eb-1423-719331dfe52f
 # ╠═b9144990-3473-11eb-0ba9-59f3fe6ddbc0
 # ╠═bbda1c1e-347a-11eb-0e7a-756906c4c9f4
