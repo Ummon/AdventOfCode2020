@@ -607,6 +607,88 @@ md"
 **Result for part 2**: $(fix_to_not_loop(input_day8))
 "
 
+# ╔═╡ ed5f09a0-3a2d-11eb-3592-6bec15fbc19b
+md"## Day [9]"
+
+# ╔═╡ f5750b80-3a2d-11eb-2edc-a767123b4bee
+function parse_day9(lines)
+	parse.(Int64, lines)
+end
+
+# ╔═╡ 2c12b6f0-3a2f-11eb-2aca-b54f0aeb9807
+function first_number_without_valid_pair(numbers, preamble_size)	
+	for i ∈ preamble_size+1:length(numbers)
+		previous = numbers[i-preamble_size:i-1]
+		n = numbers[i]
+		if n ∉ [a + b for a ∈ previous for b ∈ previous if a ≠ b]
+			return n
+		end
+	end
+end
+
+# ╔═╡ 0218f5c0-3a35-11eb-3833-a7472bcbc11b
+function find_encryption_weakness(numbers, target)
+	l = length(numbers)
+	for i ∈ 1:l
+		for j ∈ i+1:l			
+			ξ = numbers[i:j]
+			s = sum(ξ)
+			if s == target 
+				return maximum(ξ) + minimum(ξ)
+			elseif s > target
+				break
+			end
+		end
+	end
+end
+
+# ╔═╡ 2c96db10-3a2f-11eb-266d-3db1dfe51f8c
+let
+	input = "35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576"
+	numbers = parse_day9(split(input, '\n'))	
+	
+	result_part1 = first_number_without_valid_pair(numbers, 5)
+	result_part2 = find_encryption_weakness(numbers, result_part1)
+	
+	md"
+Test 1, part 1: $(result_part1 == 127)
+	
+Test 1, part 2: $(result_part2 == 62)
+	"
+end
+
+# ╔═╡ 299e6950-3a34-11eb-1080-6d172718b1ba
+input_day9 = parse_day9(readlines("data/day09.txt"))
+
+# ╔═╡ 484f9ea0-3a34-11eb-28a2-a95d5444ad50
+let
+	target = first_number_without_valid_pair(input_day9, 25)	
+	md"
+**Result for part 1**: $target
+
+**Result for part 2**: $(find_encryption_weakness(input_day9, target))
+"
+end
+
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
@@ -665,3 +747,10 @@ md"
 # ╟─d6afedee-3a0a-11eb-31d7-3f16633dbf5d
 # ╟─aa322be0-3a0e-11eb-27ec-d13acf9084aa
 # ╟─d867dd80-3a12-11eb-1ae7-3119a294b25a
+# ╟─ed5f09a0-3a2d-11eb-3592-6bec15fbc19b
+# ╠═f5750b80-3a2d-11eb-2edc-a767123b4bee
+# ╠═2c12b6f0-3a2f-11eb-2aca-b54f0aeb9807
+# ╠═0218f5c0-3a35-11eb-3833-a7472bcbc11b
+# ╟─2c96db10-3a2f-11eb-266d-3db1dfe51f8c
+# ╟─299e6950-3a34-11eb-1080-6d172718b1ba
+# ╟─484f9ea0-3a34-11eb-28a2-a95d5444ad50
