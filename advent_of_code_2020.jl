@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -138,9 +138,7 @@ md"**Result for part 2**: $(nb_of_valid_passwords_part2(input_day2))"
 md"## Day 3"
 
 # ╔═╡ 1b7ec110-3536-11eb-04c4-af7b43e6c68e
-function parse_day3(lines)	
-	map(==("#"), hcat(split.(lines, "")...))'
-end
+parse_day3(lines) = map(==("#"), hcat(split.(lines, "")...))'
 
 # ╔═╡ a6abdfc0-3536-11eb-3003-c13c39952d78
 function nb_trees_encountered(area :: AbstractArray{Bool, 2}, moves = [(1, 3)])
@@ -611,9 +609,7 @@ md"
 md"## Day [9]"
 
 # ╔═╡ f5750b80-3a2d-11eb-2edc-a767123b4bee
-function parse_day9(lines)
-	parse.(Int64, lines)
-end
+parse_day9(lines) = parse.(Int64, lines)
 
 # ╔═╡ 2c12b6f0-3a2f-11eb-2aca-b54f0aeb9807
 function first_number_without_valid_pair(numbers, preamble_size)	
@@ -634,7 +630,7 @@ function find_encryption_weakness(numbers, target)
 			ξ = numbers[i:j]
 			s = sum(ξ)
 			if s == target 
-				return maximum(ξ) + minimum(ξ)
+				return extrema(ξ) |> sum
 			elseif s > target
 				break
 			end
@@ -688,6 +684,64 @@ let
 **Result for part 2**: $(find_encryption_weakness(input_day9, target))
 "
 end
+
+# ╔═╡ 8dbc1ed0-3ae5-11eb-04fb-917b1bd334fe
+md"## Day 10"
+
+# ╔═╡ 949a6400-3ae5-11eb-24a8-ad11cff7ebf4
+parse_day10(lines) = parse.(Int64, lines)
+
+# ╔═╡ a8a0e2ce-3ae5-11eb-3e36-570fd0d07492
+function joltage_differences(ratings)
+	sorted = sort(ratings)
+	diff(vcat(0, sorted, sorted[end] + 3))
+end
+
+# ╔═╡ 220a4ae2-3e14-11eb-0c7c-b122dc09f8c2
+nb_of_3_time_number_of_1(nums) = count(==(3), nums) * count(==(1), nums)
+
+# ╔═╡ b647ad20-3e18-11eb-36c7-b5cd7e0a0f1b
+function nb_of_arrangements(diff)
+	product = 1
+	current = 0
+	for e ∈ diff
+		if e == 3
+			if current > 1		
+				product *= 2 ^ (current - 1)
+			end
+			current = 0
+		elseif e == 1
+			current += 1
+		end
+	end
+	product	
+end	
+
+# ╔═╡ af716c60-3ae5-11eb-3ffb-43ba2903fda1
+let
+	input₁ = parse_day10(split("16 10 15 5 1 11 7 19 6 12 4", ' '))
+	input₂ = parse_day10(split("28 33 18 42 31 14 46 20 48 47 24 23 49 45 19 38 39 11 1 32 25 35 8 17 7 9 4 2 34 10 3", ' '))
+	
+	@show nb_of_arrangements(joltage_differences(input₂))
+	
+	result_test_1_part1 = nb_of_3_time_number_of_1(joltage_differences(input₁))
+	result_test_2_part1 = nb_of_3_time_number_of_1(joltage_differences(input₂))
+	
+	md"
+Test 1, part 1: $(result_test_1_part1 == 35)
+	
+Test 2, part 1: $(result_test_2_part1 == 220)
+	"
+end
+
+# ╔═╡ 8e796300-3e14-11eb-1c5e-49034b090e74
+input_day10 = parse_day9(readlines("data/day10.txt"))
+
+# ╔═╡ 992eeef0-3e14-11eb-0f06-af6990f63c9b
+nb_of_3_time_number_of_1(joltage_differences(input_day10))
+
+# ╔═╡ 9542b1e0-3e1a-11eb-2f2d-d78b9a39014c
+
 
 # ╔═╡ Cell order:
 # ╟─661be9a0-353b-11eb-3598-a5b5245368cb
@@ -754,3 +808,12 @@ end
 # ╟─2c96db10-3a2f-11eb-266d-3db1dfe51f8c
 # ╟─299e6950-3a34-11eb-1080-6d172718b1ba
 # ╟─484f9ea0-3a34-11eb-28a2-a95d5444ad50
+# ╟─8dbc1ed0-3ae5-11eb-04fb-917b1bd334fe
+# ╠═949a6400-3ae5-11eb-24a8-ad11cff7ebf4
+# ╠═a8a0e2ce-3ae5-11eb-3e36-570fd0d07492
+# ╠═220a4ae2-3e14-11eb-0c7c-b122dc09f8c2
+# ╠═b647ad20-3e18-11eb-36c7-b5cd7e0a0f1b
+# ╠═af716c60-3ae5-11eb-3ffb-43ba2903fda1
+# ╟─8e796300-3e14-11eb-1c5e-49034b090e74
+# ╠═992eeef0-3e14-11eb-0f06-af6990f63c9b
+# ╠═9542b1e0-3e1a-11eb-2f2d-d78b9a39014c
