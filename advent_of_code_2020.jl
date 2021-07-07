@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.14.8
 
 using Markdown
 using InteractiveUtils
@@ -7,9 +7,10 @@ using InteractiveUtils
 # ╔═╡ 661be9a0-353b-11eb-3598-a5b5245368cb
 html"""<style>
 main {
-	max-width: 100%;
-	margin-right: 0;
-}</style>
+    max-width: 90% !important;
+    margin-right: 100px !important;
+}
+</style>
 """
 
 # ╔═╡ f0dd4400-3313-11eb-3295-af913c2212fb
@@ -744,7 +745,7 @@ nb_of_3_time_number_of_1(joltage_differences(input_day10))
 
 
 # ╔═╡ Cell order:
-# ╟─661be9a0-353b-11eb-3598-a5b5245368cb
+# ╠═661be9a0-353b-11eb-3598-a5b5245368cb
 # ╟─f0dd4400-3313-11eb-3295-af913c2212fb
 # ╟─0b7b8920-3314-11eb-2cfb-7d20c0967e67
 # ╟─877b32e0-3315-11eb-0e96-650b19da693e
